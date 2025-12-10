@@ -121,7 +121,9 @@ namespace Discord.Net.ED25519
         /// Finalizes SHA-512 hashing.
         /// </summary>
         /// <returns>Hash bytes</returns>
+#pragma warning disable CS0465 // Introducing a 'Finalize' method can interfere with destructor invocation
         public byte[] Finalize()
+#pragma warning restore CS0465 // Introducing a 'Finalize' method can interfere with destructor invocation
         {
             var result = new byte[64];
             Finalize(new ArraySegment<byte>(result));

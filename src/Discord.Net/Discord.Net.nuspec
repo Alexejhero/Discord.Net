@@ -14,29 +14,13 @@
     <icon>PackageLogo.png</icon>
     <readme>NUGET_README.md</readme>
     <dependencies>
-        <group targetFramework="net10.0">
+        <group targetFramework="netstandard2.1">
           <dependency id="Discord.Net.Core" version="3.18.0$suffix$" />
           <dependency id="Discord.Net.Rest" version="3.18.0$suffix$" />
           <dependency id="Discord.Net.WebSocket" version="3.18.0$suffix$" />
           <dependency id="Discord.Net.Commands" version="3.18.0$suffix$" />
           <dependency id="Discord.Net.Webhook" version="3.18.0$suffix$" />
           <dependency id="Discord.Net.Interactions" version="3.18.0$suffix$" />
-        </group>
-        <group targetFramework="net9.0">
-            <dependency id="Discord.Net.Core" version="3.18.0$suffix$" />
-            <dependency id="Discord.Net.Rest" version="3.18.0$suffix$" />
-            <dependency id="Discord.Net.WebSocket" version="3.18.0$suffix$" />
-            <dependency id="Discord.Net.Commands" version="3.18.0$suffix$" />
-            <dependency id="Discord.Net.Webhook" version="3.18.0$suffix$" />
-            <dependency id="Discord.Net.Interactions" version="3.18.0$suffix$" />
-        </group>
-        <group targetFramework="net8.0">
-            <dependency id="Discord.Net.Core" version="3.18.0$suffix$" />
-            <dependency id="Discord.Net.Rest" version="3.18.0$suffix$" />
-            <dependency id="Discord.Net.WebSocket" version="3.18.0$suffix$" />
-            <dependency id="Discord.Net.Commands" version="3.18.0$suffix$" />
-            <dependency id="Discord.Net.Webhook" version="3.18.0$suffix$" />
-            <dependency id="Discord.Net.Interactions" version="3.18.0$suffix$" />
         </group>
     </dependencies>
   </metadata>

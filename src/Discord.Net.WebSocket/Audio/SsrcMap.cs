@@ -66,7 +66,7 @@ namespace Discord.Audio
             public ClientData(ulong userId, bool isSpeaking)
             {
                 UserId = userId;
-                Timer = new Timer(Delay);
+                Timer = new Timer(Delay.TotalMilliseconds);
                 Timer.AutoReset = false;
                 Timer.Elapsed += OnTimerElapsed;
                 IsSpeaking = isSpeaking;
