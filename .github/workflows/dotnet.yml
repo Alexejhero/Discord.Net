@@ -21,7 +21,7 @@ jobs:
           DOTNET_INSTALL_DIR: "/usr/share/dotnet"
         steps:
           - uses: actions/checkout@v5
-          
+
           - name: Setup .NET
             uses: actions/setup-dotnet@v5
             with:
@@ -30,13 +30,13 @@ jobs:
           - name: Is Tag Build
             if: startsWith(github.ref, 'refs/tags/')
             run: echo "IsTagBuild=true" >> $GITHUB_ENV
-            
+
           - name: Generate Beta Suffix
             if: env.IsTagBuild == 'true' && contains(github.ref_name, '-')
-            env: 
+            env:
               REF_NAME: ${{ github.ref_name }}
             run: echo "Suffix=${REF_NAME##*-}" >> $GITHUB_ENV
-          
+
           - name: Generate Suffix
             if: env.IsTagBuild != 'true'
             run: echo "Suffix=nightly.$(date +'%Y%m%d').${{ github.run_number }}" >> $GITHUB_ENV
@@ -55,9 +55,9 @@ jobs:
             if: failure() || success()
             with:
               files: ./**/*.trx
-          
+
           - name: Pack
-            env: 
+            env:
               buildNumber: $Suffix
             run: |
               dotnet pack "src\Discord.Net.Core\Discord.Net.Core.csproj" --no-restore --no-build -v minimal -c Release -o ${{ env.ArtifactStagingDirectory }} /p:BuildNumber=${{ env.Suffix }} /p:IsTagBuild=${{ env.IsTagBuild }}
@@ -67,39 +67,39 @@ jobs:
               dotnet pack "src\Discord.Net.Webhook\Discord.Net.Webhook.csproj" --no-restore --no-build -v minimal -c Release -o ${{ env.ArtifactStagingDirectory }} /p:BuildNumber=${{ env.Suffix }} /p:IsTagBuild=${{ env.IsTagBuild }}
               dotnet pack "src\Discord.Net.Interactions\Discord.Net.Interactions.csproj" --no-restore --no-build -v minimal -c Release -o ${{ env.ArtifactStagingDirectory }} /p:BuildNumber=${{ env.Suffix }} /p:IsTagBuild=${{ env.IsTagBuild }}
 #              dotnet pack "experiment\Discord.Net.BuildOverrides\Discord.Net.BuildOverrides.csproj" --no-restore --no-build -v minimal -c Release -o ${{ env.ArtifactStagingDirectory }} /p:BuildNumber=${{ env.Suffix }} /p:IsTagBuild=${{ env.IsTagBuild }}
-          
+
           - name: Publish Artifacts
             uses: actions/upload-artifact@v5
             with:
               name: discord-net
               path: ${{ env.ArtifactStagingDirectory }}/*
-    
+
     deploy:
       name: Deploy
       runs-on: ubuntu-22.04
       needs: [build]
-      if: github.event_name != 'pull_request'
+      if: false && github.event_name != 'pull_request'
       env:
         IsTagBuild: false
         ArtifactStagingDirectory: "artifacts"
         REPOSITORY_URL: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
       steps:
         - uses: actions/checkout@v5
-        
+
         - name: Is Tag Build
           if: startsWith(github.ref, 'refs/tags/')
           run: echo "IsTagBuild=true" >> $GITHUB_ENV
-          
+
         - name: Generate Beta Suffix
           if: env.IsTagBuild == 'true' && contains(github.ref_name, '-')
-          env: 
+          env:
             REF_NAME: ${{ github.ref_name }}
           run: echo "Suffix=-${REF_NAME##*-}" >> $GITHUB_ENV
 
         - name: Generate Suffix
           if: env.IsTagBuild != 'true'
           run: echo "Suffix=-nightly.$(date +'%Y%m%d').${{ github.run_number }}" >> $GITHUB_ENV
-          
+
         - name: setup NuGet
           uses: nuget/setup-nuget@v2
           with:
@@ -110,7 +110,7 @@ jobs:
           with:
             name: discord-net
             path: ${{ env.ArtifactStagingDirectory }}
-        
+
         - name: Pack Metapackage
           run: nuget pack "src/Discord.Net/Discord.Net.nuspec" -OutputDirectory ${{ env.ArtifactStagingDirectory }} -NonInteractive -p "suffix=${{ env.Suffix }}"
 
@@ -125,7 +125,7 @@ jobs:
           run: nuget push "${{ env.ArtifactStagingDirectory }}/*.nupkg" -Source ${{ vars.NIGHTLY_FEED }}
 
         - name: Push Nightly to GitHub Pacakges
-          if: vars.PUSH_NIGHTLY_GITHUB == 'true'            
+          if: vars.PUSH_NIGHTLY_GITHUB == 'true'
           run: nuget push "${{ env.ArtifactStagingDirectory }}/*.nupkg" -Source ${{ env.REPOSITORY_URL }}
 
         - name: Push Release
