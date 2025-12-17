@@ -492,8 +492,8 @@ namespace Discord.Audio
                             {
                                 await _audioLogger.DebugAsync("Malformed Frame", ex).ConfigureAwait(false);
                             }
+                            await _audioLogger.DebugAsync($"Received {packet.Length} bytes from user {userId}").ConfigureAwait(false);
                         }
-                        //await _audioLogger.DebugAsync($"Received {packet.Length} bytes from user {userId}").ConfigureAwait(false);
                     }
                 }
             }
