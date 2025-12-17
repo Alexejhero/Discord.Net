@@ -2,7 +2,7 @@ name: Dotnet Build
 
 on:
     push:
-        branches: ["dev"]
+        branches: ["*"]
         tags: ["*"]
         paths-ignore:
           - 'docs/**'
